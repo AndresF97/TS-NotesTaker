@@ -1,4 +1,6 @@
 node_modules
 package-lock.json
 /node_modules
-/package-loc.json
+/package-lock.json
+.env
+/.env
