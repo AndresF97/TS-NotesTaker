@@ -1,16 +1,16 @@
 import "../css/styles.css"
 interface Note {
-    title?:string;
-    text?:string;
-    id?:string;
+  title?: string;
+  text?: string;
+  id?: string;
 }
-let noteForm : HTMLFormElement | any;
-let noteTitle : HTMLInputElement | any;
-let noteText : HTMLTextAreaElement | any;
-let saveNoteBtn : HTMLButtonElement | any;
-let newNoteBtn : HTMLButtonElement | any;
-let noteList : NodeListOf<HTMLUListElement>| any ;
-let clearBtn : HTMLButtonElement | any;
+let noteForm: HTMLFormElement | any;
+let noteTitle: HTMLInputElement | any;
+let noteText: HTMLTextAreaElement | any;
+let saveNoteBtn: HTMLButtonElement | any;
+let newNoteBtn: HTMLButtonElement | any;
+let noteList: NodeListOf<HTMLUListElement> | any;
+let clearBtn: HTMLButtonElement | any;
 
 if (window.location.pathname === '/notes') {
   noteForm = document.querySelector('.note-form');
@@ -23,17 +23,17 @@ if (window.location.pathname === '/notes') {
 }
 
 // Show an element
-const show = (elem:HTMLButtonElement ) => {
+const show = (elem: HTMLButtonElement) => {
   elem.style.display = 'inline';
 };
 
 // Hide an element
-const hide = (elem:HTMLButtonElement) => {
+const hide = (elem: HTMLButtonElement) => {
   elem.style.display = 'none';
 };
 
 // activeNote is used to keep track of the note in the textarea
-let activeNote:Note;
+let activeNote: Note;
 
 const getNotes = () =>
   fetch('/api/notes', {
@@ -43,7 +43,7 @@ const getNotes = () =>
     }
   });
 
-const saveNote = (note:Note) =>
+const saveNote = (note: Note) =>
   fetch('/api/notes', {
     method: 'POST',
     headers: {
@@ -52,7 +52,7 @@ const saveNote = (note:Note) =>
     body: JSON.stringify(note)
   });
 
-const deleteNote = (id:string) =>
+const deleteNote = (id: string) =>
   fetch(`/api/notes/${id}`, {
     method: 'DELETE',
     headers: {
@@ -64,7 +64,7 @@ const renderActiveNote = () => {
   hide(saveNoteBtn);
   hide(clearBtn);
 
-  if (activeNote.id) {
+  if (activeNote?.id) {
     show(newNoteBtn);
     noteTitle.setAttribute('readonly', true);
     noteText.setAttribute('readonly', true);
@@ -91,21 +91,26 @@ const handleNoteSave = () => {
 };
 
 // Delete the clicked note
-const handleNoteDelete = (e:Event ) => {
+const handleNoteDelete = (e: Event) => {
   // Prevents the click listener for the list from being called when the button inside of it is clicked
   e.stopPropagation();
-
   const note = e.target as HTMLButtonElement;
-  const noteId = JSON.parse(note.parentElement?.getAttribute('data-note')!).id;
+  let id = JSON.parse(note.parentElement?.getAttribute('data-note')!).id
+  if (id !== 'undefined') {
+    // console.log(JSON.parse(note.parentElement?.getAttribute('data-note')!).id)
+    const noteId = id;
+    console.log(noteId)
 
-  if (activeNote.id === noteId) {
-    activeNote = {};
+
+    if (activeNote?.id === noteId) {
+      activeNote = {};
+    }
+
+    deleteNote(noteId).then(() => {
+      getAndRenderNotes();
+      renderActiveNote();
+    });
   }
-
-  deleteNote(noteId).then(() => {
-    getAndRenderNotes();
-    renderActiveNote();
-  });
 };
 
 // Sets the activeNote and displays it
@@ -136,16 +141,16 @@ const handleRenderBtns = () => {
 };
 
 // Render the list of note titles
-const renderNoteList = async (notes:any) => {
+const renderNoteList = async (notes: any) => {
   let jsonNotes = await notes.json();
   if (window.location.pathname === '/notes') {
-    noteList.forEach((el:HTMLElement) => (el.innerHTML = ''));
+    noteList.forEach((el: HTMLElement) => (el.innerHTML = ''));
   }
 
   let noteListItems = [];
 
   // Returns HTML element with or without a delete button
-  const createLi = (text:string, delBtn = true) => {
+  const createLi = (text: string, delBtn = true) => {
     const liEl = document.createElement('li');
     liEl.classList.add('list-group-item');
 
@@ -177,7 +182,7 @@ const renderNoteList = async (notes:any) => {
     noteListItems.push(createLi('No saved Notes', false));
   }
 
-  jsonNotes.forEach((note:any) => {
+  jsonNotes.forEach((note: any) => {
     const li = createLi(note.title);
     li.dataset.note = JSON.stringify(note);
 
