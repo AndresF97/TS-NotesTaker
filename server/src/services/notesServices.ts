@@ -50,9 +50,9 @@ class NotesServices {
         return message
     }
     async deleteNotes(id:string) {
-        const allNotes = await this.getNotes()
+        let allNotes = await this.read()
         let message:string;
-        allNotes.filter((note)=> note.id !== id)
+        allNotes = allNotes.filter((note:Notes)=> note.id !== id)
         try{
             await this.write(allNotes)
             message = "Success"

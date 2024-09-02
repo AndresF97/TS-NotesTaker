@@ -43,9 +43,11 @@ class NotesServices {
         return message;
     }
     async deleteNotes(id) {
-        const allNotes = await this.getNotes();
+        let allNotes = await this.read();
         let message;
-        allNotes.filter((note) => note.id !== id);
+        allNotes = allNotes.filter((note) => note.id !== id);
+        console.log(id);
+        console.log(allNotes);
         try {
             await this.write(allNotes);
             message = "Success";

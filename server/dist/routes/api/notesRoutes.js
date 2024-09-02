@@ -3,7 +3,7 @@ const router = Router();
 import NotesServices from "../../services/notesServices.js";
 router.get("/", async (_req, res) => {
     try {
-        const allNotes = NotesServices.getNotes();
+        const allNotes = await NotesServices.getNotes();
         res.status(200).json(allNotes);
     }
     catch (err) {
@@ -25,6 +25,7 @@ router.post("/", async (_req, res) => {
     }
 });
 router.delete('/:id', async (_req, res) => {
+    console.log("route hit");
     try {
         const data = await NotesServices.deleteNotes(_req.params.id);
         if (data === "sucess") {
