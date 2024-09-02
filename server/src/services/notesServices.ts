@@ -55,7 +55,7 @@ class NotesServices {
         allNotes.filter((note)=> note.id !== id)
         try{
             await this.write(allNotes)
-            message = "Deleted Note"
+            message = "Success"
         }catch{
             message = "Could not delete note"
         }
