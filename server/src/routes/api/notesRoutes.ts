@@ -1,7 +1,7 @@
 import { Router, type Request, type Response } from "express";
 const router = Router();
 
-import NotesServices from "../../services/notesServices"
+import NotesServices from "../../services/notesServices.js"
 
 router.get("/", async (_req: Request, res: Response) => {
     try {
